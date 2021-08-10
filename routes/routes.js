@@ -1,4 +1,4 @@
-const url = require('url');
+// const url = require('url');
 // const util = require('util');
 
 const books = JSON.stringify([
@@ -19,28 +19,57 @@ const authors = JSON.stringify([
   { id: 6, name: 'Author 6' }
 ]);
 
-export default (path, res) => {
-  console.log(url.parse(path, true));
+const Routes = (path, res) => {
+    const url = new URL(path, 'http://localhost:8000/');
+    const params = url.searchParams;
+    switch (url.pathname) {
+        case '/':
+            res.setHeader('Content-Type', 'text/plain');
+            res.status = 200;
+            res.end('NodeJs Server');
+            break;
+        case '/books':
+            res.setHeader('Content-Type', 'application/json');
+            res.status = 200;
+            const bookId = params.get('id');
+            if(bookId) {
+                const listBooks = JSON.parse(books);
+                const book = listBooks.find(({ id }) => id === parseInt(bookId));
+                if(!book) {
+                    res.end(JSON.stringify({ error: 'Book not found' }));
+                } else {
+                    res.end(JSON.stringify(book));
+                }
 
-  switch (path) {
-    case '/':
-      res.setHeader('Content-Type', 'text/plain');
-      res.status = 200;
-      res.end('NodeJs Server');
-      break;
-    case '/books':
-      res.setHeader('Content-Type', 'application/json');
-      res.status = 200;
-      res.end(books);
-      break;
-    case '/authors':
-      res.setHeader('Content-Type', 'application/json');
-      res.status = 200;
-      res.end(authors);
-      break;
-    default:
-      res.setHeader('Content-Type', 'application/json');
-      res.status = 404;
-      res.end(JSON.stringify({ error: 'Resource not found' }));
-  }
+            } else {
+                res.end(books);
+            }
+
+            break;
+        case '/authors':
+            res.setHeader('Content-Type', 'application/json');
+            res.status = 200;
+            
+            const authorId = params.get('id');
+            if(authorId) {
+                const listAuthors = JSON.parse(authors);
+                const author = listAuthors.find(({ id }) => id === parseInt(authorId));
+                if(!author) {
+                    res.end(JSON.stringify({ error: 'Author not found' }));
+                } else {
+                    res.end(JSON.stringify(author));
+                }
+
+            } else {
+                res.end(authors);
+            }
+            
+            break;
+        default:
+            res.setHeader('Content-Type', 'application/json');
+            res.status = 404;
+            res.end(JSON.stringify({ error: 'Resource not found' }));
+    }
 };
+
+module.exports = Routes;

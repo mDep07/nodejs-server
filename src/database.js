@@ -3,11 +3,8 @@ import { Low, JSONFile } from 'lowdb'
 import { fileURLToPath } from 'url'
 let db;
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
 async function createConnection() {
-    const file = join(__dirname, 'db.json');
-    const adapter = new JSONFile(file);
+    const adapter = new JSONFile('db.json');
     db = new Low(adapter);
     db.data = { books: [], authors: [] };
     await db.write()

@@ -1,6 +1,4 @@
-import { join, dirname } from 'path'
 import { Low, JSONFile } from 'lowdb'
-import { fileURLToPath } from 'url'
 let db;
 
 async function createConnection() {

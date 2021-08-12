@@ -1,8 +1,8 @@
 import express from 'express';
 const app = express();
 
-import books from './books.js';
-import authors from './authors.js';
+import books from './books.routes.js';
+import authors from './authors.routes.js';
 
 app.use(books);
 app.use(authors);

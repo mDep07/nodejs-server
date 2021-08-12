@@ -2,11 +2,10 @@
   "name": "nodejs-server",
   "version": "1.0.0",
   "description": "Nodejs Server ",
-  "main": "index.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon src/app.js --ignore db.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/app.js --ignore db.json"
   },
   "repository": {
     "type": "git",

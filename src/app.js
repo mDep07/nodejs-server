@@ -1,9 +1,9 @@
 import express, { urlencoded, json } from 'express';
 const app = express();
 
-import { createConnection } from './database';
+import { createConnection } from './database.js';
 
-import routes from './routes/index';
+import routes from './routes/index.js';
 
 const port = 8000;
 

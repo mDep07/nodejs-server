@@ -1,7 +1,7 @@
 import express from 'express';
 const app = express();
 
-import { getBooks } from '../controllers/books.controller.js';
+import { getBooks, createBook } from '../controllers/books.controller.js';
 
 
 //Get all books
@@ -16,14 +16,7 @@ app.get('/book/:id', (req, res) => {
 });
 
 //Create new book
-app.post('/book', (req, res) => {
-    const {title, author_id} = req.body;
-    const newBook = { id: uuidv4(), title, author_id };
-
-    books.push(newBook);
-    
-    res.json({ book: newBook });
-});
+app.post('/book', createBook);
 
 //Get all books by author
 app.get('/books/author/:id', (req, res) => {

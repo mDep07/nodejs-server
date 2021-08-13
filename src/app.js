@@ -1,5 +1,6 @@
 import express, { urlencoded, json } from 'express';
 const app = express();
+import 'moment/locale/es.js';
 
 import { createConnection } from './database.js';
 

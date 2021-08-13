@@ -13,6 +13,21 @@ const getBooks = (req, res) => {
     res.json({ books });
 }
 
+const createBook = (req, res) => {
+    const { title, author_id } = req.body;
+    if(!title || !author_id) {
+        res.json({ err: 'Title and Author are required.' });
+        return;
+    }
+
+    const newBook = { id: uuidv4(), title, author_id };
+
+    books.push(newBook);
+    
+    res.json({ book: newBook });
+}
+
 export {
-    getBooks
+    getBooks,
+    createBook
 }

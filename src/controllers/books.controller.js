@@ -11,6 +11,21 @@ const getBooks = (req, res) => {
     res.json({ books });
 }
 
+const getBook = (req, res) => {
+    const db = getConnection();
+    const { books } = db.data;
+
+    const bookId = req.params.id;
+    const book = books.find(({ id }) => id === bookId);
+
+    if(!book) {
+        res.json({ error: 'Book not found.' });
+        return;
+    }
+
+    res.json({ book });
+}
+
 const createBook = async (req, res) => {
     const db = getConnection();
     const { books } = db.data;
@@ -31,7 +46,58 @@ const createBook = async (req, res) => {
     res.json({ book: newBook });
 }
 
+const deleteBook = async (req, res) => {
+    const db = getConnection();
+    const { books } = db.data;
+
+    const bookId = req.params.id;
+    const bookIndex = books.findIndex(({id}) => id === bookId);
+
+    if(bookIndex === -1) {
+        res.json({ error: 'Book not found.' });
+        return;
+    }
+
+    books.splice(bookIndex, 1);
+    await db.write();
+    
+    res.json({ message: 'Book deleted correctly' });
+}
+
+const updateBook = async (req, res) => {
+    const db = getConnection();
+    const { books } = db.data;
+    const bookId = req.params.id;
+
+    const { title, author_id, publication_date, description } = req.body;
+    const book = books.find(({id}) => id === bookId);
+
+    if(!book) {
+        res.json({ error: 'Book not found.' });
+        return;
+    }
+
+    const bookIndex = books.findIndex(({id}) => id === book.id);
+
+    const updatedBook = {
+        id: book.id,
+        title: title || book.title,
+        author_id: author_id || book.author_id, 
+        publication_date: publication_date || book.publication_date,
+        description: description || book.description
+    }
+
+    books.splice(bookIndex, 1, updatedBook);
+    await db.write();
+    
+    res.json({ message: 'Book updated correctly' });
+}
+
+
 export {
     getBooks,
-    createBook
+    getBook,
+    createBook,
+    deleteBook,
+    updateBook
 }

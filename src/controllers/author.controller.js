@@ -3,6 +3,8 @@ import { getConnection } from '../database.js';
 
 import moment from 'moment';
 
+import { getAuthorBooks } from './books.controller.js';
+
 const getAuthors = (req, res) => {
     const db = getConnection();
     const { authors } = db.data;
@@ -13,12 +15,17 @@ const getAuthor = (req, res) => {
     const db = getConnection();
     const { authors } = db.data;
 
-    const authorId = req.params.id;
+    const authorId = req.params.id;    
     const author = authors.find(({ id }) => id === authorId);
 
     if(!author) {
         res.json({ error: 'Author not found.' });
         return;
+    }
+
+    const showBooks = req.query.show_books;
+    if(showBooks === 'true') {
+        author.books = getAuthorBooks(author.id);
     }
 
     res.json({ author });

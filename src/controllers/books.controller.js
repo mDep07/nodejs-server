@@ -100,11 +100,19 @@ const updateBook = async (req, res) => {
     res.json({ message: 'Book updated correctly' });
 }
 
+const getAuthorBooks = (author_id) => {
+    const db = getConnection();
+    const { books } = db.data;
+
+    return books.filter(({ author_id }) => author_id === author_id);
+}
+
 
 export {
     getBooks,
     getBook,
     createBook,
     deleteBook,
-    updateBook
+    updateBook,
+    getAuthorBooks
 }

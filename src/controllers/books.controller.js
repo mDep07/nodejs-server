@@ -38,6 +38,11 @@ const createBook = async (req, res) => {
         return;
     }
 
+    if(!getAuthorBook(author_id)) {
+        res.json({ error: 'Author not found.' });
+        return;
+    }
+
     const date = moment(publication_date, 'yyyy-MM-DD');
 
     const newBook = { id: uuidv4(), title, author_id, description, publication_date: date };

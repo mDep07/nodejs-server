@@ -3,8 +3,6 @@ import { getConnection } from '../database.js';
 
 import moment from 'moment';
 
-
-
 const getBooks = (req, res) => {
     const db = getConnection();
     const { books } = db.data;

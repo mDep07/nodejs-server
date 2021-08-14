@@ -3,6 +3,8 @@ import { getConnection } from '../database.js';
 
 import moment from 'moment';
 
+import { getAuthorBook } from './author.controller.js';
+
 const getBooks = (req, res) => {
     const db = getConnection();
     const { books } = db.data;
@@ -20,8 +22,10 @@ const getBook = (req, res) => {
         res.json({ error: 'Book not found.' });
         return;
     }
+    
+    const author = getAuthorBook(book.author_id);
 
-    res.json({ book });
+    res.json({ book, author });
 }
 
 const createBook = async (req, res) => {

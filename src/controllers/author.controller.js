@@ -80,6 +80,15 @@ const updateAuthor = async (req, res) => {
     res.json({ message: 'Author updated correctly' });
 }
 
+const getAuthorBook = (author_id) => {
+    const db = getConnection();
+    const { authors } = db.data;
+    
+    const author = authors.find(({ id }) => id === author_id);
+
+    return author;
+}
+
 const existAuthor = (authorName, authors) => {
     return authors.find(({ name }) => name === authorName) ? true : false;
 }
@@ -88,5 +97,6 @@ export {
     getAuthors,
     getAuthor,
     createAuthor,
-    updateAuthor
+    updateAuthor,
+    getAuthorBook
 }

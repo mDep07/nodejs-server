@@ -8,7 +8,13 @@ import { getAuthorBook } from './author.controller.js';
 const getBooks = (req, res) => {
     const db = getConnection();
     const { books } = db.data;
-    res.json({ books });
+
+    const listBooks = books.map(b => {
+        const author = getAuthorBook(b.author_id);
+        return {...b, author}
+    })
+
+    res.json({ listBooks });
 }
 
 const getBook = (req, res) => {
@@ -25,7 +31,7 @@ const getBook = (req, res) => {
     
     const author = getAuthorBook(book.author_id);
 
-    res.json({ book, author });
+    res.json({book: {...book, author}});
 }
 
 const createBook = async (req, res) => {
@@ -100,11 +106,11 @@ const updateBook = async (req, res) => {
     res.json({ message: 'Book updated correctly' });
 }
 
-const getAuthorBooks = (author_id) => {
+const getAuthorBooks = (authorId) => {
     const db = getConnection();
     const { books } = db.data;
 
-    return books.filter(({ author_id }) => author_id === author_id);
+    return books.filter(({ author_id }) => author_id === authorId);
 }
 
 

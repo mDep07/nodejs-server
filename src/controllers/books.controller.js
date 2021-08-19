@@ -9,9 +9,9 @@ const getBooks = (req, res) => {
     const db = getConnection();
     const { books } = db.data;
 
-    const listBooks = books.map(b => {
-        const author = getAuthorBook(b.author_id);
-        return {...b, author}
+    const listBooks = books.map(book => {
+        const authors = book.authors.map(author => getAuthorBook(author.author_id));
+        return {...book, authors}
     })
 
     res.json({ listBooks });
@@ -29,29 +29,35 @@ const getBook = (req, res) => {
         return;
     }
     
-    const author = getAuthorBook(book.author_id);
+    const authors = book.authors.map(author => getAuthorBook(author.author_id));
 
-    res.json({book: {...book, author}});
+    res.json({book: {...book, authors}});
 }
 
 const createBook = async (req, res) => {
     const db = getConnection();
     const { books } = db.data;
 
-    const { title, author_id, publication_date, description } = req.body;
-    if(!title || !author_id || !publication_date) {
-        res.json({ error: '"title", "author_id" and "publication_date" are required.' });
+    const { title, authors, publication_date, description } = req.body;
+    if(!title || !publication_date) {
+        res.json({ error: '"title", and "publication_date" are required.' });
         return;
     }
 
-    if(!getAuthorBook(author_id)) {
-        res.json({ error: 'Author not found.' });
+    const listAuthors = JSON.parse(authors || '[]');
+    if(!listAuthors.length) {
+        res.json({ error: 'One "author" is required.' });
+        return;
+    }
+
+    if(!listAuthors.every(({author_id}) => getAuthorBook(author_id))) {
+        res.json({ error: 'One or more "Author/s" are not valid.' });
         return;
     }
 
     const date = moment(publication_date, 'yyyy-MM-DD');
 
-    const newBook = { id: uuidv4(), title, author_id, description, publication_date: date };
+    const newBook = { id: uuidv4(), title, description, publication_date: date, authors: listAuthors };
 
     books.push(newBook);
     await db.write();
